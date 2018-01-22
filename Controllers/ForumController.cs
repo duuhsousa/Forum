@@ -8,6 +8,7 @@ namespace Forum.Controllers
 {
 
     [Route("api/[controller]")]
+    [Produces("application/json")]
     public class ForumController:Controller
     {
         DAOUsuarios daoUsuario = new DAOUsuarios();
