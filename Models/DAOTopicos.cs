@@ -58,7 +58,7 @@ namespace Forum.Models
                 cmd.Connection = conn;
                 
                 cmd.CommandType = CommandType.Text;
-                cmd.CommandText = "INSERT INTO TopicoForum (titulo,descricao) values(@t,@d)";
+                cmd.CommandText = "INSERT INTO TopicoForum (titulo,descricao) values('@t','@d')";
                 
                 cmd.Parameters.AddWithValue("@t",topico.titulo);
                 cmd.Parameters.AddWithValue("@d",topico.descricao);
@@ -80,6 +80,74 @@ namespace Forum.Models
             finally{
                 conn.Close();
             }
+            return resultado;
+        }
+
+        public string Excluir(int id){
+            string resultado = "";
+            try{
+                conn = new SqlConnection(conexao);
+                conn.Open();
+                cmd=new SqlCommand();
+                cmd.Connection = conn;
+                cmd.CommandType = CommandType.Text;
+                cmd.CommandText = "delete from TopicoForum where idTopico = @id";
+                
+                cmd.Parameters.AddWithValue("@id",id);
+
+                int r = cmd.ExecuteNonQuery();
+
+                if(r>0){
+                    resultado="OK";
+                }
+
+                cmd.Parameters.Clear();
+            } 
+            catch(SqlException ex){
+                resultado = ex.Message;
+            }
+            catch(Exception ex){
+                resultado = ex.Message;
+            }
+            finally{
+                conn.Close();
+            }
+
+            return resultado;
+        }
+
+        public string Atualizar(Topicos topico){
+            string resultado = "";
+            try{
+                conn = new SqlConnection(conexao);
+                conn.Open();
+                cmd=new SqlCommand();
+                cmd.Connection = conn;
+                cmd.CommandType = CommandType.Text;
+                cmd.CommandText = "update TopicoForum set titulo=@t, descricao=@d where idTopico = @id";
+                
+                cmd.Parameters.AddWithValue("@t",topico.titulo);
+                cmd.Parameters.AddWithValue("@d",topico.descricao);
+                cmd.Parameters.AddWithValue("@id",topico.idTopico);
+
+                int r = cmd.ExecuteNonQuery();
+
+                if(r>0){
+                    resultado="OK";
+                }
+
+                cmd.Parameters.Clear();
+            } 
+            catch(SqlException ex){
+                resultado = ex.Message;
+            }
+            catch(Exception ex){
+                resultado = ex.Message;
+            }
+            finally{
+                conn.Close();
+            }
+
             return resultado;
         }
     }
