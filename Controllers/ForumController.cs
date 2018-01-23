@@ -7,7 +7,7 @@ using System;
 namespace Forum.Controllers
 {
 
-    [Route("api/[controller]")]
+    [Route("api/Usuario")]
     [Produces("application/json")]
     public class ForumController:Controller
     {

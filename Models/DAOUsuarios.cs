@@ -5,25 +5,18 @@ using System.Data.SqlClient;
 
 namespace Forum.Models
 {
-    public class DAOUsuarios
+    public class DAOUsuarios:Conexao
     {
         
-        SqlConnection conn = null;
-        SqlCommand cmd = null;
-        SqlDataReader dr = null;
-        string conexao = @"Data Source=localhost,1433;Initial Catalog=Forum;user id=sa;password=DockerSql@2018";
         public List<Usuarios> Listar(){
+
             List<Usuarios> usuario = new List<Usuarios>();
             
             try{
-                conn = new SqlConnection();
-                conn.ConnectionString = conexao;
+                conn = new SqlConnection(Caminho());
                 conn.Open();
-                cmd = new SqlCommand();
+                cmd = new SqlCommand("Select * from Usuario",conn);
                 cmd.Connection = conn;
-
-                cmd.CommandType = CommandType.Text;
-                cmd.CommandText = "Select * from Usuario";
 
                 dr = cmd.ExecuteReader();
 
@@ -53,7 +46,7 @@ namespace Forum.Models
         public bool Cadastrar(Usuarios usuario){
             bool resultado = false;
             try{
-                conn = new SqlConnection(conexao);
+                conn = new SqlConnection(Caminho());
                 conn.Open();
                 cmd=new SqlCommand();
                 cmd.Connection = conn;
@@ -85,10 +78,10 @@ namespace Forum.Models
             return resultado;
         }
 
-        public string Excluir(int id){
-            string resultado = "";
+        public bool Excluir(int id){
+            bool resultado = false;
             try{
-                conn = new SqlConnection(conexao);
+                conn = new SqlConnection(Caminho());
                 conn.Open();
                 cmd=new SqlCommand();
                 cmd.Connection = conn;
@@ -100,16 +93,16 @@ namespace Forum.Models
                 int r = cmd.ExecuteNonQuery();
 
                 if(r>0){
-                    resultado="OK";
+                    resultado=true;
                 }
 
                 cmd.Parameters.Clear();
             } 
             catch(SqlException ex){
-                resultado = ex.Message;
+                throw new Exception(ex.Message);
             }
             catch(Exception ex){
-                resultado = ex.Message;
+                throw new Exception(ex.Message);
             }
             finally{
                 conn.Close();
@@ -121,17 +114,18 @@ namespace Forum.Models
         public string Atualizar(Usuarios usuario){
             string resultado = "";
             try{
-                conn = new SqlConnection(conexao);
+                conn = new SqlConnection(Caminho());
                 conn.Open();
                 cmd=new SqlCommand();
                 cmd.Connection = conn;
                 cmd.CommandType = CommandType.Text;
-                cmd.CommandText = "update Usuario set nomeUsuario=@n, login=@l, senha=@s where idUsuario = @id";
+                cmd.CommandText = "update Usuario set nomeUsuario=@n, login=@l, senha=@s, dataCadastro=@d where idUsuario = @id";
                 
                 cmd.Parameters.AddWithValue("@n",usuario.nomeUsuario);
                 cmd.Parameters.AddWithValue("@l",usuario.login);
                 cmd.Parameters.AddWithValue("@s",usuario.senha);
                 cmd.Parameters.AddWithValue("@id",usuario.idUsuario);
+                cmd.Parameters.AddWithValue("@d",DateTime.Now);
 
                 int r = cmd.ExecuteNonQuery();
 

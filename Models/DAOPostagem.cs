@@ -5,19 +5,15 @@ using System.Data.SqlClient;
 
 namespace Forum.Models
 {
-    public class DAOPostagem
+    public class DAOPostagem:Conexao
     {
-        SqlConnection conn = null;
-        SqlCommand cmd = null;
-        SqlDataReader dr = null;
-        string conexao = @"Data Source=localhost,1433;Initial Catalog=Forum;user id=sa;password=DockerSql@2018";
 
         public List<Postagens> Listar(){
             List<Postagens> postagem = new List<Postagens>();
             
             try{
                 conn = new SqlConnection();
-                conn.ConnectionString = conexao;
+                conn.ConnectionString = Caminho();
                 conn.Open();
                 cmd = new SqlCommand();
                 cmd.Connection = conn;
@@ -53,7 +49,7 @@ namespace Forum.Models
         public bool Cadastrar(Postagens postagem){
             bool resultado = false;
             try{
-                conn = new SqlConnection(conexao);
+                conn = new SqlConnection(Caminho());
                 conn.Open();
                 cmd=new SqlCommand();
                 cmd.Connection = conn;
@@ -88,7 +84,7 @@ namespace Forum.Models
         public string Excluir(int id){
             string resultado = "";
             try{
-                conn = new SqlConnection(conexao);
+                conn = new SqlConnection(Caminho());
                 conn.Open();
                 cmd=new SqlCommand();
                 cmd.Connection = conn;
@@ -121,7 +117,7 @@ namespace Forum.Models
         public string Atualizar(Postagens postagem){
             string resultado = "";
             try{
-                conn = new SqlConnection(conexao);
+                conn = new SqlConnection(Caminho());
                 conn.Open();
                 cmd=new SqlCommand();
                 cmd.Connection = conn;

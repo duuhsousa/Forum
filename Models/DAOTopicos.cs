@@ -5,19 +5,15 @@ using System.Data.SqlClient;
 
 namespace Forum.Models
 {
-    public class DAOTopicos
+    public class DAOTopicos:Conexao
     {
-        SqlConnection conn = null;
-        SqlCommand cmd = null;
-        SqlDataReader dr = null;
-        string conexao = @"Data Source=localhost,1433;Initial Catalog=Forum;user id=sa;password=DockerSql@2018";
 
         public List<Topicos> Listar(){
             List<Topicos> topico = new List<Topicos>();
             
             try{
                 conn = new SqlConnection();
-                conn.ConnectionString = conexao;
+                conn.ConnectionString = Caminho();
                 conn.Open();
                 cmd = new SqlCommand();
                 cmd.Connection = conn;
@@ -52,7 +48,7 @@ namespace Forum.Models
         public bool Cadastrar(Topicos topico){
             bool resultado = false;
             try{
-                conn = new SqlConnection(conexao);
+                conn = new SqlConnection(Caminho());
                 conn.Open();
                 cmd=new SqlCommand();
                 cmd.Connection = conn;
@@ -86,7 +82,7 @@ namespace Forum.Models
         public string Excluir(int id){
             string resultado = "";
             try{
-                conn = new SqlConnection(conexao);
+                conn = new SqlConnection(Caminho());
                 conn.Open();
                 cmd=new SqlCommand();
                 cmd.Connection = conn;
@@ -119,7 +115,7 @@ namespace Forum.Models
         public string Atualizar(Topicos topico){
             string resultado = "";
             try{
-                conn = new SqlConnection(conexao);
+                conn = new SqlConnection(Caminho());
                 conn.Open();
                 cmd=new SqlCommand();
                 cmd.Connection = conn;
