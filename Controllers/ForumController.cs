@@ -19,8 +19,16 @@ namespace Forum.Controllers
         }
 
         [HttpGet("{id}",Name="UsuarioAtual")]
-        public Usuarios Get(int id){
-            return daoUsuario.Listar().Where(x=>x.idUsuario==id).FirstOrDefault();
+        public IActionResult Get(int id){
+            var rs = new JsonResult(daoUsuario.Listar().Where(x=>x.idUsuario==id).FirstOrDefault());
+            rs.ContentType = "application/json";
+            if(rs.Value==null){
+                rs.StatusCode = 204;
+                rs.Value = "O ID "+id+" não foi encontrado.";
+            }else{
+                rs.StatusCode = 200;
+            }
+            return Json(rs);
         }
 
         [HttpPost]
