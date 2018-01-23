@@ -40,7 +40,7 @@ namespace Forum.Controllers
         [HttpPut]
         public IActionResult Put([FromBody] Topicos topico){
             daoTopico.Atualizar(topico);
-            return CreatedAtRoute("UsuarioAtual", new {id=topico.idTopico}, topico);
+            return CreatedAtRoute("TopicoAtual", new {id=topico.idTopico}, topico);
         }
     }
 }
