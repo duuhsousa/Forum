@@ -33,8 +33,32 @@ namespace Forum.Controllers
 
         [HttpPost]
         public IActionResult Post([FromBody] Usuarios usuario){
-            daoUsuario.Cadastrar(usuario);
-            return CreatedAtRoute("UsuarioAtual", new {id=usuario.idUsuario}, usuario);
+            JsonResult resultado = null;
+            
+            try{
+                if(!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }else{
+                    resultado = new JsonResult("");
+                    resultado.ContentType = "application/json";
+                    
+                    if(!daoUsuario.Cadastrar(usuario))
+                    {
+                        resultado.StatusCode = 404;
+                        resultado.Value = "Ocorreu um erro";
+                    }else{
+                        resultado.StatusCode = 200;
+                    }
+                }
+            }
+            catch(Exception ex){
+                resultado = new JsonResult("");
+                resultado.StatusCode = 204;
+                resultado.Value = ex.Message;
+            }
+
+            return (Json(resultado));
         }
 
         [HttpDelete("{id}")]
